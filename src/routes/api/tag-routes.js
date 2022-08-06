@@ -39,13 +39,14 @@ router.post("/", async (req, res) => {
 
   try {
     const { tag_name } = req.body;
-    const newTag = await Tag.create(tag_name);
-    if (!newTag) {
-      res.status(404).json({
+
+    if (!tag_name) {
+      res.status(400).json({
         success: false,
-        message: `Tag name ${tag_name} does not exist`,
+        message: "Unable to create tag",
       });
-      res.json(newTag);
+      const newTag = await Tag.create(req.body);
+      return res.json(newTag);
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
